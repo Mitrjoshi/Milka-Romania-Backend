@@ -88,7 +88,7 @@ export const GenerateSongController = async (req: Request, res: Response) => {
         version: "milka-germany",
         variant: String(variant),
         message: songData.pMsg,
-        senderName: "Mitr",
+        senderName: songData.pFromName,
         receiverName: songData.pToName,
         language: language,
       },
@@ -128,7 +128,12 @@ export const GenerateSongController = async (req: Request, res: Response) => {
     }
 
     res.status(200).send({
-      data: songGenerationUberduckData.render_video_response,
+      data: {
+        url: songGenerationUberduckData.render_video_response,
+        receiverName: songData.pToName,
+        senderName: songData.pFromName,
+        msg: songData.pMsg,
+      },
       success: true,
     });
   } catch (error) {
