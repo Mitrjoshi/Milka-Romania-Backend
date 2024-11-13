@@ -14,10 +14,12 @@ interface I_Request {
   lyricsId: string;
   variant: number;
   voice: string;
+  language: string;
 }
 
 export const GenerateSongController = async (req: Request, res: Response) => {
-  const { lyricsId, regId, songId, variant, voice }: I_Request = req.body;
+  const { lyricsId, regId, songId, variant, voice, language }: I_Request =
+    req.body;
 
   const requiredFields: I_Request = {
     lyricsId,
@@ -25,6 +27,7 @@ export const GenerateSongController = async (req: Request, res: Response) => {
     songId,
     variant,
     voice,
+    language,
   };
 
   const missingFields = Object.keys(requiredFields).filter(
@@ -87,7 +90,7 @@ export const GenerateSongController = async (req: Request, res: Response) => {
         message: songData.pMsg,
         senderName: "Mitr",
         receiverName: songData.pToName,
-        language: "de",
+        language: language,
       },
       render_video: true,
     };
