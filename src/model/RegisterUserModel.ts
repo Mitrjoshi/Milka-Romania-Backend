@@ -1,6 +1,6 @@
 import { I_RequestHitLog } from "./AddHitLogModel";
 import sql from "mssql";
-import dbConfig from "../configs/dbConfig";
+import dbConfig from "@/configs/dbConfig";
 
 export interface I_RequestRegisterBody extends I_RequestHitLog {
   firstName: string;
@@ -8,6 +8,7 @@ export interface I_RequestRegisterBody extends I_RequestHitLog {
   email: string;
   terms: boolean;
   promo: boolean;
+  market: string;
   utm_camp?: string;
   utm_content?: string;
   utm_medium?: string;
@@ -33,7 +34,7 @@ export const RegisterModel = async (
       .input("pBrowser", sql.NVarChar, params.browser)
       .input("pIP", sql.NVarChar, params.ip)
 
-      .input("pMarket", sql.NVarChar, process.env.MARKET)
+      .input("pMarket", sql.NVarChar, params.market)
 
       .input("pFirstName", sql.NVarChar, params.firstName)
       .input("pLastName", sql.NVarChar, params.lastName)

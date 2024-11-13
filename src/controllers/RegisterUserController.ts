@@ -14,6 +14,7 @@ export const RegisterUserController = async (req: Request, res: Response) => {
     browser,
     device,
     os,
+    market,
   }: I_RequestRegisterBody = req.body;
 
   const requiredFields: Partial<I_RequestRegisterBody> = {
@@ -26,6 +27,7 @@ export const RegisterUserController = async (req: Request, res: Response) => {
     device,
     ip: req.ip || "0",
     os,
+    market,
   };
 
   const missingFields = Object.keys(requiredFields).filter(
@@ -42,11 +44,11 @@ export const RegisterUserController = async (req: Request, res: Response) => {
   const modelRes = await RegisterModel(req.body);
 
   if (!modelRes) {
-    res.send({ error: "Something went wrong", success: false });
+    res.status(400).send({ error: "Something went wrong", success: false });
     return;
   }
 
-  res.send({
+  res.status(200).send({
     data: {
       regId: modelRes.pRegID,
       userFound: modelRes.pFound,

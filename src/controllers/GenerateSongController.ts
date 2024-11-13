@@ -1,6 +1,11 @@
 import { backing_track_array, voicemodel_uuid_array } from "@/constants";
 import { CheckLyricsVersionModel } from "@/model/CheckLyricsVersionModel";
-import { I_UberduckGenerateSong } from "@/utils/UberduckGenerateSong";
+import { GetSongDataModel } from "@/model/GetSongDataModel";
+import { UpdateSongModel } from "@/model/UpdateSongModel";
+import {
+  I_UberduckGenerateSong,
+  UberduckGenerateSong,
+} from "@/utils/UberduckGenerateSong";
 import { Request, Response } from "express";
 
 interface I_Request {
@@ -52,11 +57,13 @@ export const GenerateSongController = async (req: Request, res: Response) => {
   }
 
   try {
-    const checkVersion = await CheckLyricsVersionModel({
-      songId,
+    const songData = await GetSongDataModel({
+      songId: String(songId),
+      lyricsId: String(lyricsId),
+      regId: String(regId),
     });
 
-    if (!checkVersion) {
+    if (!songData) {
       res.status(400).send({
         success: false,
         message: "Something went wrong.",
@@ -64,19 +71,8 @@ export const GenerateSongController = async (req: Request, res: Response) => {
       return;
     }
 
-    if (!checkVersion.pAllow) {
-      res.status(400).send({
-        success: false,
-        message: "Max Retry Limit Reached.",
-      });
-
-      return;
-    }
-
-    console.log(checkVersion);
-
     const generateSongParam: I_UberduckGenerateSong = {
-      lyrics: [],
+      lyrics: [songData.pLyrics.split("\n\n")],
       backing_track:
         backing_track_array[
           Math.floor(Math.random() * backing_track_array.length)
@@ -88,18 +84,53 @@ export const GenerateSongController = async (req: Request, res: Response) => {
       metadata: {
         version: "milka-germany",
         variant: String(variant),
-        message: checkVersion.pMsg,
+        message: songData.pMsg,
         senderName: "Mitr",
-        receiverName: checkVersion.pToName,
-        language: checkVersion.pLang,
+        receiverName: songData.pToName,
+        language: "de",
       },
       render_video: true,
     };
 
-    res.status(200).send("checkVersion");
+    const songGenerationUberduckData = await UberduckGenerateSong(
+      generateSongParam
+    );
+
+    if (!songGenerationUberduckData.render_video_response) {
+      res.status(400).send({
+        error: "Something went wrong.",
+        success: false,
+      });
+      return;
+    }
+
+    const updateVideoModel = await UpdateSongModel({
+      APIVideoReqJson: JSON.stringify(generateSongParam),
+      songId,
+      variant,
+      voice: voice,
+      videoUuid: songGenerationUberduckData.render_uuid,
+      mixLink: songGenerationUberduckData.mix_url,
+      vocalLink: songGenerationUberduckData.vocals_url,
+      videoLink: songGenerationUberduckData.render_video_response,
+      videoTitle: songGenerationUberduckData.title,
+    });
+
+    if (!updateVideoModel) {
+      res.status(400).send({
+        error: "Something went wrong.",
+        success: false,
+      });
+      return;
+    }
+
+    res.status(200).send({
+      data: songGenerationUberduckData.render_video_response,
+      success: true,
+    });
   } catch (error) {
     res.status(400).send({
-      error: `Type of variant should be number`,
+      error: error,
       success: false,
     });
     return;

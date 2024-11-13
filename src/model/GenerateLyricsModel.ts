@@ -1,5 +1,5 @@
 import sql from "mssql";
-import dbConfig from "../configs/dbConfig";
+import dbConfig from "@/configs/dbConfig";
 
 export interface I_RequestGenerateLyrics {
   regId: number;

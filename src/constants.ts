@@ -4,6 +4,9 @@ export const SERVER_ROUTES = {
   generateLyrics: "/generate-lyrics",
   regenerateLyrics: "/regenerate-lyrics",
   generateSong: "/generate-song",
+  getCode: "/get-code",
+  unlockCode: "/unlock",
+  setFlag: "/set-flag",
 };
 
 export const backing_track_array = ["1e4c6e5a-2782-4a7c-aa98-2a6c48904de5"];

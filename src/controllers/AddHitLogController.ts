@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Request, Response } from "express";
 import { AddHitLogModel } from "@/model/AddHitLogModel";
 import { I_RequestHitLog } from "@/model/AddHitLogModel";
 
@@ -6,7 +6,7 @@ export const AddHitLogController = async (req: Request, res: Response) => {
   const { browser, device, os }: I_RequestHitLog = req.body;
 
   if (!device || !os || !browser) {
-    res.json({ message: "Invalid Inputs", success: false });
+    res.status(400).json({ message: "Invalid Inputs", success: false });
     return;
   }
 
