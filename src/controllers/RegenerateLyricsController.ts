@@ -57,12 +57,12 @@ export const RegenerateLyricsController = async (
       occasion: checkVersion.pMsg,
       receiver_name: checkVersion.pToName,
       d1: checkVersion.pRelation,
-      q1: checkVersion.pSpendTime,
-      q2: checkVersion.pTheyLove,
-      q3: checkVersion.pHobbies,
-      q4: checkVersion.pLaugh,
-      q5: checkVersion.pFavMem,
-      q6: "",
+      q1: checkVersion.pSpl,
+      q2: checkVersion.pSpendTime,
+      q3: checkVersion.pTheyLove,
+      q4: checkVersion.pHobbies,
+      q5: checkVersion.pLaugh,
+      q6: checkVersion.pFavMem,
     };
 
     if (!checkVersion.pAllow) {

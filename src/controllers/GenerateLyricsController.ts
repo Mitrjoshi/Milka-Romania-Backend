@@ -62,12 +62,12 @@ export const GenerateLyricsController = async (req: Request, res: Response) => {
       occasion: msg,
       receiver_name: name,
       d1: relationship,
-      q1: spendTime,
-      q2: theyLove,
-      q3: hobbies,
-      q4: laugh,
-      q5: favMem,
-      q6: "",
+      q1: spl,
+      q2: spendTime,
+      q3: theyLove,
+      q4: hobbies,
+      q5: laugh,
+      q6: favMem,
     };
 
     const responseByUberduck = await UberduckGenerateLyrics(lyricRequestJson);
