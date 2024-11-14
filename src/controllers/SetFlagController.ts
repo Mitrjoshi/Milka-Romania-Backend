@@ -4,12 +4,12 @@ import { I_RequestSetFlag, SetFlagModel } from "@/model/SetFlagModel";
 export const SetFlagController = async (req: Request, res: Response) => {
   const { regId, songId, type }: I_RequestSetFlag = req.body;
 
-  if (!regId || !songId || !type) {
+  if (!songId || !type) {
     res.status(400).json({ message: "Invalid Inputs", success: false });
     return;
   }
 
-  if (typeof regId !== "number" || typeof songId !== "number") {
+  if (typeof songId !== "number") {
     res.status(400).json({ message: "Invalid inputs type", success: false });
     return;
   }
@@ -48,6 +48,7 @@ export const SetFlagController = async (req: Request, res: Response) => {
 
     res.status(200).send({
       success: true,
+      type,
     });
   } catch (error) {
     res.status(400).send({ message: "Something went wrong.", success: false });

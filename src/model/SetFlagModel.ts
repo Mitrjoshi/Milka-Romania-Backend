@@ -2,7 +2,7 @@ import dbConfig from "@/configs/dbConfig";
 import sql from "mssql";
 
 export interface I_RequestSetFlag {
-  regId: number;
+  regId: number | null;
   songId: number;
   type: string;
 }
