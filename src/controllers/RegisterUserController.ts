@@ -2,6 +2,8 @@ import {
   I_RequestRegisterBody,
   RegisterModel,
 } from "@/model/RegisterUserModel";
+import { UpdateConsultixModel } from "@/model/UpdateConsultixModel";
+import { ConsultixOperations } from "@/utils/ConsultixOperations";
 import { Request, Response } from "express";
 
 export const RegisterUserController = async (req: Request, res: Response) => {
@@ -39,20 +41,40 @@ export const RegisterUserController = async (req: Request, res: Response) => {
       error: `Missing required fields: ${missingFields.join(", ")}`,
       success: false,
     });
-  }
-
-  const modelRes = await RegisterModel(req.body);
-
-  if (!modelRes) {
-    res.status(400).send({ error: "Something went wrong", success: false });
     return;
   }
 
-  res.status(200).send({
-    data: {
-      regId: modelRes.pRegID,
-      userFound: modelRes.pFound,
-    },
-    success: true,
-  });
+  try {
+    const modelRes = await RegisterModel(req.body);
+
+    if (!modelRes) {
+      res.status(400).send({ error: "Something went wrong", success: false });
+      return;
+    }
+
+    const consultixRes = await ConsultixOperations({
+      email,
+      firstName,
+      lastName,
+      promo,
+    });
+
+    if (consultixRes.IsSuccessful) {
+      await UpdateConsultixModel({
+        consumerId: consultixRes.Data.ConsumerId,
+        jobId: consultixRes.JobId,
+        regId: modelRes.pRegID,
+      });
+    }
+
+    res.status(200).send({
+      data: {
+        regId: modelRes.pRegID,
+        userFound: modelRes.pFound,
+      },
+      success: true,
+    });
+  } catch (error) {
+    res.status(400).send({ error, success: false });
+  }
 };
