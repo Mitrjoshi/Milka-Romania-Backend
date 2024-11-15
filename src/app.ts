@@ -18,7 +18,14 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: [
+      "http://localhost:5173",
+      "https://milka-romania-stag-25.onmlab.in/",
+      "https://milka-czechia-stag-25.onmlab.in/",
+      "https://milka-slovakia-stag-25.onmlab.in/",
+      "https://milka-hungary-stag-25.onmlab.in/",
+      "https://milka-germany-stag-25.onmlab.in/",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
     allowedHeaders: [
