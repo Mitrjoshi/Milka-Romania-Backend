@@ -21,6 +21,13 @@ export const UnlockCodeController = async (req: Request, res: Response) => {
       return;
     }
 
+    if (!unlockCodeData.pVideoLink) {
+      res
+        .status(400)
+        .send({ message: "Something went wrong.", success: false });
+      return;
+    }
+
     res.status(200).send({
       data: {
         msg: unlockCodeData.pMsg,
