@@ -81,9 +81,9 @@ export const GenerateSongController = async (req: Request, res: Response) => {
           Math.floor(Math.random() * backing_track_array.length)
         ],
       voicemodel_uuid:
-        voicemodel_uuid_array[
-          Math.floor(Math.random() * voicemodel_uuid_array.length)
-        ],
+        voice === "male"
+          ? "28e13832-5bff-45f5-8b19-126d9e771f5b"
+          : "e61814d4-b6ea-4f59-bc5c-aa7d58f67c01",
       metadata: {
         version: "milka-germany",
         variant: String(variant),
