@@ -41,7 +41,9 @@ export const UberduckGenerateSong = async (params: I_UberduckGenerateSong) => {
         headers: {
           "Content-Type": "application/json",
         },
+        timeout:300000
       }
+
     );
 
     return data;
