@@ -75,7 +75,7 @@ export const GenerateSongController = async (req: Request, res: Response) => {
     }
 
     const generateSongParam: I_UberduckGenerateSong = {
-      lyrics: [songData.pLyrics.split("\n\n")],
+      lyrics: [songData.pLyrics.split("\n")],
       backing_track:
         backing_track_array[
           Math.floor(Math.random() * backing_track_array.length)

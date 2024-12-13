@@ -1,9 +1,11 @@
 .env
 .env.*.local
 .vscode/
+
 *.tsbuildinfo
+dist.zip
+
 .npm
 dist/
 build/
 node_modules/
-dist.zip

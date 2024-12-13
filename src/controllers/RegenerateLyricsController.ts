@@ -1,22 +1,25 @@
 import { CheckLyricsVersionModel } from "@/model/CheckLyricsVersionModel";
 import { IncreaseLyricsVersionModel } from "@/model/IncreaseLyricsVersionModel";
+import { CustomPipelineGenerateLyrics } from "@/utils/CustomPipelineApi";
 import { UberduckGenerateLyrics } from "@/utils/UberduckGenerateLyrics";
 import { Request, Response } from "express";
 
 interface I_Request {
   regId: number;
   songId: number;
+  region: string;
 }
 
 export const RegenerateLyricsController = async (
   req: Request,
   res: Response
 ) => {
-  const { regId, songId }: I_Request = req.body;
+  const { regId, songId, region }: I_Request = req.body;
 
   const requiredFields = {
     regId,
     songId,
+    region,
   };
 
   const missingFields = Object.keys(requiredFields).filter(
@@ -74,7 +77,19 @@ export const RegenerateLyricsController = async (
       return;
     }
 
-    const responseByUberduck = await UberduckGenerateLyrics(lyricRequestJson);
+    const responseByUberduck = await CustomPipelineGenerateLyrics({
+      msg: checkVersion.pMsg,
+      pronouns: checkVersion.pPronoun,
+      q1: checkVersion.pSpl,
+      q2: checkVersion.pSpendTime,
+      q3: checkVersion.pTheyLove,
+      q4: checkVersion.pHobbies,
+      q5: checkVersion.pLaugh,
+      q6: checkVersion.pFavMem,
+      relation: checkVersion.pRelation,
+      receiverName: checkVersion.pToName,
+      region: region.toLowerCase(),
+    });
 
     if (!responseByUberduck) {
       res.status(400).send({
@@ -85,7 +100,7 @@ export const RegenerateLyricsController = async (
 
     const increaseLyricVersion = await IncreaseLyricsVersionModel({
       APILyricsReqJson: JSON.stringify(lyricRequestJson),
-      lyrics: responseByUberduck?.choices[0].message.content,
+      lyrics: responseByUberduck?.lyrics,
       songId,
     });
 
@@ -100,7 +115,7 @@ export const RegenerateLyricsController = async (
     res.status(200).send({
       success: true,
       data: {
-        lyrics: responseByUberduck?.choices[0].message.content,
+        lyrics: responseByUberduck?.lyrics,
         lyricsId: increaseLyricVersion.pLyricsID,
         songId,
       },

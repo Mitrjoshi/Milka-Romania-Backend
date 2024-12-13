@@ -2,7 +2,7 @@ import {
   GenerateLyricsModel,
   I_RequestGenerateLyrics,
 } from "@/model/GenerateLyricsModel";
-import { UberduckGenerateLyrics } from "@/utils/UberduckGenerateLyrics";
+import { CustomPipelineGenerateLyrics } from "@/utils/CustomPipelineApi";
 import { Request, Response } from "express";
 
 export const GenerateLyricsController = async (req: Request, res: Response) => {
@@ -58,19 +58,22 @@ export const GenerateLyricsController = async (req: Request, res: Response) => {
 
   try {
     const lyricRequestJson = {
-      gender: pronoun,
-      occasion: msg,
-      receiver_name: name,
-      d1: relationship,
+      msg,
+      pronouns: pronoun,
       q1: spl,
       q2: spendTime,
       q3: theyLove,
       q4: hobbies,
       q5: laugh,
       q6: favMem,
+      relation: relationship,
+      receiverName: name,
+      region: lang.toLowerCase(),
     };
 
-    const responseByUberduck = await UberduckGenerateLyrics(lyricRequestJson);
+    const responseByUberduck = await CustomPipelineGenerateLyrics(
+      lyricRequestJson
+    );
 
     if (!responseByUberduck) {
       res.status(400).send({
@@ -82,7 +85,7 @@ export const GenerateLyricsController = async (req: Request, res: Response) => {
     const modelRes = await GenerateLyricsModel({
       ...requiredFields,
       APILyricsReqJson: JSON.stringify(lyricRequestJson),
-      lyrics: responseByUberduck?.choices[0].message.content,
+      lyrics: responseByUberduck?.lyrics,
     });
 
     if (!modelRes) {
@@ -96,7 +99,7 @@ export const GenerateLyricsController = async (req: Request, res: Response) => {
     res.status(200).send({
       success: true,
       data: {
-        lyrics: responseByUberduck?.choices[0].message.content,
+        lyrics: responseByUberduck?.lyrics,
         lyricsId: modelRes.pLyricsID,
         songId: modelRes.pSongID,
       },
@@ -105,6 +108,7 @@ export const GenerateLyricsController = async (req: Request, res: Response) => {
     res.status(400).send({
       success: false,
       message: "Something went wrong.",
+      error,
     });
   }
 };
