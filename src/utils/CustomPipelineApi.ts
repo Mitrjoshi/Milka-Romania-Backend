@@ -1,6 +1,6 @@
 import axios from "axios";
 
-interface I_Request {
+interface I_LyricsRequest {
   region: string;
   receiverName: string;
   msg: string;
@@ -14,7 +14,7 @@ interface I_Request {
   q6: string;
 }
 
-interface I_Response {
+interface I_LyricsResponse {
   success: boolean;
   message: string;
   trackID: number;
@@ -22,10 +22,43 @@ interface I_Response {
   refID: number;
 }
 
-export const CustomPipelineGenerateLyrics = async (params: I_Request) => {
+export interface I_SongRequest {
+  region: string;
+  senderName: string;
+  receiverName: string;
+  msg: string;
+  trackID: number;
+  lyrics: string;
+  tag: string;
+}
+interface I_SongResponse {
+  success: boolean;
+  message: string;
+  songID: number;
+}
+
+export const CustomPipelineGenerateLyrics = async (params: I_LyricsRequest) => {
   try {
-    const { data }: { data: I_Response } = await axios.post(
+    const { data }: { data: I_LyricsResponse } = await axios.post(
       process.env.CUSTOM_PIPELINE_LYRICS_URL as string,
+      params,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const CustomPipelineGenerateSong = async (params: I_SongRequest) => {
+  try {
+    const { data }: { data: I_SongResponse } = await axios.post(
+      process.env.CUSTOM_PIPELINE_VIDEO_URL as string,
       params,
       {
         headers: {

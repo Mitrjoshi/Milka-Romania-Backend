@@ -7,6 +7,7 @@ export const SERVER_ROUTES = {
   getCode: "/get-code",
   unlockCode: "/unlock",
   setFlag: "/set-flag",
+  songGenerationWebhook: "/song-generation-webhook",
 };
 
 export const backing_track_array = ["1e4c6e5a-2782-4a7c-aa98-2a6c48904de5"];

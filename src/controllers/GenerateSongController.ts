@@ -1,11 +1,8 @@
-import { backing_track_array, voicemodel_uuid_array } from "@/constants";
-import { CheckLyricsVersionModel } from "@/model/CheckLyricsVersionModel";
 import { GetSongDataModel } from "@/model/GetSongDataModel";
-import { UpdateSongModel } from "@/model/UpdateSongModel";
 import {
-  I_UberduckGenerateSong,
-  UberduckGenerateSong,
-} from "@/utils/UberduckGenerateSong";
+  CustomPipelineGenerateSong,
+  I_SongRequest,
+} from "@/utils/CustomPipelineApi";
 import { Request, Response } from "express";
 
 interface I_Request {
@@ -74,52 +71,22 @@ export const GenerateSongController = async (req: Request, res: Response) => {
       return;
     }
 
-    const generateSongParam: I_UberduckGenerateSong = {
-      lyrics: [songData.pLyrics.split("\n")],
-      backing_track:
-        backing_track_array[
-          Math.floor(Math.random() * backing_track_array.length)
-        ],
-      voicemodel_uuid:
-        voice === "male"
-          ? "28e13832-5bff-45f5-8b19-126d9e771f5b"
-          : "e61814d4-b6ea-4f59-bc5c-aa7d58f67c01",
-      metadata: {
-        version: "milka-germany",
-        variant: String(variant),
-        message: songData.pMsg,
-        senderName: songData.pFromName,
-        receiverName: songData.pToName,
-        language: language,
-      },
-      render_video: true,
+    const generateSongParam: I_SongRequest = {
+      lyrics: songData.pLyrics,
+      msg: songData.pMsg,
+      region: language,
+      receiverName: songData.pToName,
+      senderName: songData.pFromName,
+      tag: String(songId),
+      //@ts-ignore
+      trackID: songData.pTrackID,
     };
 
-    const songGenerationUberduckData = await UberduckGenerateSong(
+    const songGenerationUberduckData = await CustomPipelineGenerateSong(
       generateSongParam
     );
 
-    if (!songGenerationUberduckData.render_video_response) {
-      res.status(400).send({
-        error: "Something went wrong.",
-        success: false,
-      });
-      return;
-    }
-
-    const updateVideoModel = await UpdateSongModel({
-      APIVideoReqJson: JSON.stringify(generateSongParam),
-      songId,
-      variant,
-      voice: voice,
-      videoUuid: songGenerationUberduckData.render_uuid,
-      mixLink: songGenerationUberduckData.mix_url,
-      vocalLink: songGenerationUberduckData.vocals_url,
-      videoLink: songGenerationUberduckData.render_video_response,
-      videoTitle: songGenerationUberduckData.title,
-    });
-
-    if (!updateVideoModel) {
+    if (!songGenerationUberduckData.success) {
       res.status(400).send({
         error: "Something went wrong.",
         success: false,
@@ -128,12 +95,6 @@ export const GenerateSongController = async (req: Request, res: Response) => {
     }
 
     res.status(200).send({
-      data: {
-        url: songGenerationUberduckData.render_video_response,
-        receiverName: songData.pToName,
-        senderName: songData.pFromName,
-        msg: songData.pMsg,
-      },
       success: true,
     });
   } catch (error) {
