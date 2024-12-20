@@ -71,11 +71,9 @@ export const GenerateLyricsController = async (req: Request, res: Response) => {
       region: lang.toLowerCase(),
     };
 
-    const responseByUberduck = await CustomPipelineGenerateLyrics(
-      lyricRequestJson
-    );
+    const response = await CustomPipelineGenerateLyrics(lyricRequestJson);
 
-    if (!responseByUberduck) {
+    if (!response) {
       res.status(400).send({
         success: false,
         message: "External API failed",
@@ -84,8 +82,8 @@ export const GenerateLyricsController = async (req: Request, res: Response) => {
 
     const modelRes = await GenerateLyricsModel({
       ...requiredFields,
-      APILyricsReqJson: JSON.stringify(lyricRequestJson),
-      lyrics: responseByUberduck?.lyrics,
+      TrackID: response.trackID,
+      lyrics: response?.lyrics,
     });
 
     if (!modelRes) {
@@ -99,9 +97,10 @@ export const GenerateLyricsController = async (req: Request, res: Response) => {
     res.status(200).send({
       success: true,
       data: {
-        lyrics: responseByUberduck?.lyrics,
+        lyrics: response?.lyrics,
         lyricsId: modelRes.pLyricsID,
         songId: modelRes.pSongID,
+        trackId: response.trackID,
       },
     });
   } catch (error) {

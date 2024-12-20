@@ -3,14 +3,10 @@ import dbConfig from "@/configs/dbConfig";
 
 export interface I_RequestUpdateSong {
   songId: number;
-  variant: number;
-  voice: string;
-  APIVideoReqJson: string;
-  videoUuid: string;
-  mixLink: string;
-  vocalLink: string;
-  videoLink: string;
-  videoTitle: string;
+  status?: string;
+  pVideoUUID?: string;
+  pVideoLink?: string;
+  pVideoError?: string | undefined;
 }
 
 export const UpdateSongModel = async (
@@ -23,15 +19,11 @@ export const UpdateSongModel = async (
     const request = new sql.Request()
       .input("pSongID", sql.Int, params.songId)
 
-      .input("pVariant", sql.TinyInt, params.variant)
-      .input("pVoice", sql.NVarChar, params.voice)
+      .input("pStatus", sql.NVarChar, params.status)
+      .input("pVideoUUID", sql.NVarChar, params.pVideoUUID)
 
-      .input("pAPIVideoReqJson", sql.NVarChar, params.APIVideoReqJson)
-      .input("pVideoUUID", sql.NVarChar, params.videoUuid)
-      .input("pMixLink", sql.NVarChar, params.mixLink)
-      .input("pVocalLink", sql.NVarChar, params.vocalLink)
-      .input("pVideoLink", sql.NVarChar, params.videoLink)
-      .input("pVideoTitle", sql.NVarChar, params.videoTitle);
+      .input("pVideoLink", sql.NVarChar, params.pVideoLink)
+      .input("pVideoError", sql.NVarChar, params.pVideoError);
 
     await request.execute("dbo.usp_updateSong");
 

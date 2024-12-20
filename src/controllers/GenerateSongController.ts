@@ -1,4 +1,5 @@
 import { GetSongDataModel } from "@/model/GetSongDataModel";
+import { UpdateSongModel } from "@/model/UpdateSongModel";
 import {
   CustomPipelineGenerateSong,
   I_SongRequest,
@@ -78,15 +79,18 @@ export const GenerateSongController = async (req: Request, res: Response) => {
       receiverName: songData.pToName,
       senderName: songData.pFromName,
       tag: String(songId),
-      //@ts-ignore
-      trackID: songData.pTrackID,
+      trackID: Number(songData.pTrackID),
     };
 
-    const songGenerationUberduckData = await CustomPipelineGenerateSong(
+    const songGenerationResponse = await CustomPipelineGenerateSong(
       generateSongParam
     );
 
-    if (!songGenerationUberduckData.success) {
+    const updateVideoModel = await UpdateSongModel({
+      songId,
+    });
+
+    if (!songGenerationResponse.success) {
       res.status(400).send({
         error: "Something went wrong.",
         success: false,
@@ -96,6 +100,7 @@ export const GenerateSongController = async (req: Request, res: Response) => {
 
     res.status(200).send({
       success: true,
+      status: songGenerationResponse.message,
     });
   } catch (error) {
     res.status(400).send({

@@ -12,6 +12,7 @@ import { GetCodeController } from "@/controllers/GetCodeController";
 import { UnlockCodeController } from "@/controllers/UnlockCodeController";
 import { SetFlagController } from "./controllers/SetFlagController";
 import { SongGenerationWebhook } from "./controllers/SongGenerationWebhook";
+import { GetVideoURLController } from "./controllers/GetVideoURLController";
 
 const app = express();
 
@@ -48,5 +49,6 @@ app.post(SERVER_ROUTES.getCode, GetCodeController);
 app.post(SERVER_ROUTES.unlockCode, UnlockCodeController);
 app.post(SERVER_ROUTES.setFlag, SetFlagController);
 app.post(SERVER_ROUTES.songGenerationWebhook, SongGenerationWebhook);
+app.post(SERVER_ROUTES.getVideo, GetVideoURLController);
 
 export default app;

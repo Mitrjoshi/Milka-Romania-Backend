@@ -1,3 +1,4 @@
+import { UpdateSongModel } from "@/model/UpdateSongModel";
 import { Request, Response } from "express";
 
 interface I_Request {
@@ -14,32 +15,16 @@ export const SongGenerationWebhook = async (
   const { songId, status, videoURL, errMsg } = req.body;
 
   try {
-    if (status === "completed") {
-      //   const updateVideoModel = await UpdateSongModel({
-      //     songId,
-      //     status,
-      //     videoURL,
-      //     errMsg,
-      //   });
+    await UpdateSongModel({
+      songId,
+      status,
+      pVideoError: errMsg as string,
+      pVideoLink: videoURL,
+    });
 
-      //   if (!updateVideoModel) {
-      //     res.status(400).send({
-      //       success: false,
-      //     });
-      //     return;
-      //   }
-
-      res.status(200).send({
-        success: true,
-      });
-
-      return;
-    } else {
-      res.status(400).send({
-        success: false,
-      });
-      return;
-    }
+    res.status(400).send({
+      success: status === "completed" ? true : false,
+    });
   } catch (error) {
     res
       .status(400)

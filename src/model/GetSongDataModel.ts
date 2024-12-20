@@ -13,6 +13,7 @@ interface I_Response {
   pToName: string;
   pFromName: string;
   pLang: string;
+  pTrackID: string;
 }
 
 export const GetSongDataModel = async (
@@ -31,6 +32,7 @@ export const GetSongDataModel = async (
       .output("pMsg", sql.NVarChar)
       .output("pToName", sql.NVarChar)
       .output("pFromName", sql.NVarChar)
+      .output("pTrackID", sql.NVarChar)
       .output("pLang", sql.NVarChar);
 
     const data = await request.execute("dbo.usp_getSongData");

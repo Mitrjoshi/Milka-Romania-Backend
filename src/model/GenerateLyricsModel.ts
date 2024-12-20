@@ -18,7 +18,7 @@ export interface I_RequestGenerateLyrics {
 
 interface I_Request extends I_RequestGenerateLyrics {
   lyrics?: string;
-  APILyricsReqJson?: any;
+  TrackID?: number;
 }
 
 interface I_Response {
@@ -48,7 +48,7 @@ export const GenerateLyricsModel = async (
       .input("pFavMem", sql.NVarChar, params.favMem)
 
       .input("pLang", sql.NVarChar, params.lang)
-      .input("pAPILyricsReqJson", sql.NVarChar, params.APILyricsReqJson)
+      .input("pTrackID", sql.NVarChar, String(params.TrackID))
       .input("pLyrics", sql.NVarChar, params.lyrics)
 
       .output("pSongID", sql.Int)
