@@ -9,9 +9,9 @@ interface I_LyricsRequest {
   q1: string;
   q2: string;
   q3: string;
-  q4: string;
-  q5: string;
-  q6: string;
+  q4: string | null;
+  q5: string | null;
+  q6: string | null;
 }
 
 interface I_LyricsResponse {
