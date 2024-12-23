@@ -21,11 +21,9 @@ export const GetVideoURLController = async (req: Request, res: Response) => {
     }
 
     res.status(200).send({
-      data: {
-        videoURL: result.pVideoLink,
-        status: result.pVideoStatus,
-      },
+      isGenerated: result.pVideoStatus === "completed",
       success: true,
+      videoURL: result.pVideoLink,
     });
   } catch (error) {
     res
