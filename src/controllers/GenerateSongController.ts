@@ -100,10 +100,13 @@ export const GenerateSongController = async (req: Request, res: Response) => {
 
     res.status(200).send({
       success: true,
-      status: songGenerationResponse.message,
-      msg: songData.pMsg,
-      receiverName: songData.pToName,
-      senderName: songData.pFromName,
+      data: {
+        status: songGenerationResponse.message,
+        msg: songData.pMsg,
+        receiverName: songData.pToName,
+        senderName: songData.pFromName,
+        newSongId: songGenerationResponse.songID,
+      },
     });
   } catch (error) {
     res.status(400).send({

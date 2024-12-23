@@ -22,7 +22,7 @@ export const SongGenerationWebhook = async (
       pVideoLink: videoURL,
     });
 
-    res.status(400).send({
+    res.status(200).send({
       success: status === "completed" ? true : false,
     });
   } catch (error) {
