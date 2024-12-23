@@ -73,16 +73,14 @@ export const GenerateSongController = async (req: Request, res: Response) => {
     }
 
     const generateSongParam: I_SongRequest = {
-      lyrics: songData.pLyrics,
+      lyrics: songData.pLyrics.toString(),
       msg: songData.pMsg,
-      region: language,
+      region: language.toLowerCase(),
       receiverName: songData.pToName,
       senderName: songData.pFromName,
       tag: String(songId),
       trackID: Number(songData.pTrackID),
     };
-
-    console.log(generateSongParam);
 
     const songGenerationResponse = await CustomPipelineGenerateSong(
       generateSongParam

@@ -32,7 +32,7 @@ export const GetSongDataModel = async (
       .output("pMsg", sql.NVarChar)
       .output("pToName", sql.NVarChar)
       .output("pFromName", sql.NVarChar)
-      .output("pTrackID", sql.NVarChar)
+      .output("pTrackID", sql.TinyInt)
       .output("pLang", sql.NVarChar);
 
     const data = await request.execute("dbo.usp_getSongData");
