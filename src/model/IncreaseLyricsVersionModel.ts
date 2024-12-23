@@ -20,7 +20,6 @@ export const IncreaseLyricsVersionModel = async (
     connection = await sql.connect(dbConfig);
     const request = new sql.Request()
       .input("pSongID", sql.Int, params.songId)
-      .input("pAPILyricsReqJson", sql.NVarChar, params.APILyricsReqJson)
       .input("pLyrics", sql.NVarChar, params.lyrics)
 
       .output("pLyricsID", sql.Int);
