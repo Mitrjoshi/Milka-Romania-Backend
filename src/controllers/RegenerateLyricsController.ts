@@ -77,21 +77,21 @@ export const RegenerateLyricsController = async (
       return;
     }
 
-    const responseByUberduck = await CustomPipelineGenerateLyrics({
+    const response = await CustomPipelineGenerateLyrics({
       msg: checkVersion.pMsg,
       pronouns: checkVersion.pPronoun,
       q1: checkVersion.pSpl,
       q2: checkVersion.pSpendTime,
       q3: checkVersion.pTheyLove,
-      q4: checkVersion.pHobbies,
-      q5: checkVersion.pLaugh,
-      q6: checkVersion.pFavMem,
+      q4: checkVersion.pHobbies || null,
+      q5: checkVersion.pLaugh || null,
+      q6: checkVersion.pFavMem || null,
       relation: checkVersion.pRelation,
       receiverName: checkVersion.pToName,
       region: region.toLowerCase(),
     });
 
-    if (!responseByUberduck) {
+    if (!response) {
       res.status(400).send({
         success: false,
         message: "External API failed",
@@ -100,8 +100,9 @@ export const RegenerateLyricsController = async (
 
     const increaseLyricVersion = await IncreaseLyricsVersionModel({
       APILyricsReqJson: JSON.stringify(lyricRequestJson),
-      lyrics: responseByUberduck?.lyrics,
+      lyrics: response?.lyrics,
       songId,
+      trackID: response.trackID,
     });
 
     if (!increaseLyricVersion) {
@@ -115,7 +116,7 @@ export const RegenerateLyricsController = async (
     res.status(200).send({
       success: true,
       data: {
-        lyrics: responseByUberduck?.lyrics,
+        lyrics: response?.lyrics,
         lyricsId: increaseLyricVersion.pLyricsID,
         songId,
       },

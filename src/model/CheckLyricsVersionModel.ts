@@ -49,7 +49,6 @@ export const CheckLyricsVersionModel = async (
 
     return res.output as I_Response;
   } catch (err) {
-    console.log(err);
     return false;
   } finally {
     if (connection && connection.connected) {

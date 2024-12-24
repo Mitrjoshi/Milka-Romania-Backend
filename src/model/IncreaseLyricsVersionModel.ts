@@ -5,6 +5,7 @@ export interface I_RequestIncreaseLyricsVersion {
   songId: number;
   APILyricsReqJson?: any;
   lyrics: string;
+  trackID: number;
 }
 
 interface I_Response {
@@ -21,6 +22,7 @@ export const IncreaseLyricsVersionModel = async (
     const request = new sql.Request()
       .input("pSongID", sql.Int, params.songId)
       .input("pLyrics", sql.NVarChar, params.lyrics)
+      .input("pTrackID", sql.TinyInt, params.trackID)
 
       .output("pLyricsID", sql.Int);
 
@@ -28,7 +30,6 @@ export const IncreaseLyricsVersionModel = async (
 
     return res.output as I_Response;
   } catch (err) {
-    console.log(err);
     return false;
   } finally {
     if (connection && connection.connected) {
