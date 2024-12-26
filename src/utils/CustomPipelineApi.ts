@@ -30,6 +30,7 @@ export interface I_SongRequest {
   trackID: number;
   lyrics: string;
   tag: string;
+  msgCode: string;
 }
 interface I_SongResponse {
   success: boolean;

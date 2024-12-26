@@ -1,16 +1,16 @@
 import { GetSongDataModel } from "@/model/GetSongDataModel";
 import { UpdateSongModel } from "@/model/UpdateSongModel";
+import { Request, Response } from "express";
 import {
   CustomPipelineGenerateSong,
   I_SongRequest,
 } from "@/utils/CustomPipelineApi";
-import { Request, Response } from "express";
 
 interface I_Request {
   regId: number;
   songId: number;
   lyricsId: string;
-  variant: number;
+  variant: string;
   voice: string;
   language: string;
 }
@@ -43,12 +43,12 @@ export const GenerateSongController = async (req: Request, res: Response) => {
   if (
     typeof regId !== "number" ||
     typeof songId !== "number" ||
-    typeof variant !== "number"
+    typeof variant !== "string"
   ) {
     const errors = [];
     if (typeof regId !== "number") errors.push("regId should be a number");
     if (typeof songId !== "number") errors.push("songId should be a number");
-    if (typeof variant !== "number") errors.push("variant should be a number");
+    if (typeof variant !== "string") errors.push("variant should be a string");
 
     res.status(400).send({
       error: `Invalid input types: ${errors.join(", ")}`,
@@ -80,6 +80,7 @@ export const GenerateSongController = async (req: Request, res: Response) => {
       senderName: songData.pFromName,
       tag: String(songId),
       trackID: Number(songData.pTrackID),
+      msgCode: variant,
     };
 
     const songGenerationResponse = await CustomPipelineGenerateSong(
