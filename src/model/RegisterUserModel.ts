@@ -1,6 +1,7 @@
 import { I_RequestHitLog } from "./AddHitLogModel";
 import sql from "mssql";
 import dbConfig from "@/configs/dbConfig";
+import { T_Country } from "@/utils/ConsultixOperations";
 
 export interface I_RequestRegisterBody extends I_RequestHitLog {
   firstName: string;
@@ -8,7 +9,8 @@ export interface I_RequestRegisterBody extends I_RequestHitLog {
   email: string;
   terms: boolean;
   promo: boolean;
-  market: string;
+  market: T_Country;
+  mobile?: string;
   utm_camp?: string;
   utm_content?: string;
   utm_medium?: string;

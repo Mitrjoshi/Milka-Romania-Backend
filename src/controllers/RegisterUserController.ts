@@ -17,6 +17,7 @@ export const RegisterUserController = async (req: Request, res: Response) => {
     device,
     os,
     market,
+    mobile,
   }: I_RequestRegisterBody = req.body;
 
   const requiredFields: Partial<I_RequestRegisterBody> = {
@@ -57,6 +58,8 @@ export const RegisterUserController = async (req: Request, res: Response) => {
       firstName,
       lastName,
       promo,
+      market,
+      mobile,
     });
 
     if (consultixRes.IsSuccessful) {
