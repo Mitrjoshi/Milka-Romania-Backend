@@ -27,22 +27,38 @@ interface I_Response {
   IsSuccessful: boolean;
 }
 
-const getMarket = (
-  market: "germany" | "romania" | "czechia" | "slovakia" | "hungary" | "austria"
-) => {
+const getMarket = (market: T_Country) => {
   switch (market) {
     case "germany":
-      return "VGVzdCBLUkFGVC5JUyBWN3xNS0RFMjQwMjAxIE1pbGthIFNheSBJdCBXaXRoIE1pbGthIEFjdGl2YXRpb24=";
+      return {
+        CODE: "DE",
+        KEY: "UzFKQlJsUXVSRVVnVmpkOFRVdEVSVEkwTURJd01TQk5hV3hyWVNCVFlYa2dTWFFnVjJsMGFDQk5hV3hyWVNCQlkzUnBkbUYwYVc5dToxYzkzNjhmMTE1MWY0NTMxOTMwMWE5MDBmM2NiYmZlMA==",
+      };
     case "romania":
-      return "S1JBRlQtUk8gVjd8TUtaWjI1MDIwMSBNaWxrYSBTYXkgSXQgV2l0aCBNaWxrYSBQcm9tb3Rpb24==";
+      return {
+        CODE: "RO",
+        KEY: "UzFKQlJsUXRVazhnVmpkOFRVdGFXakkxTURJd01TQk5hV3hyWVNCVFlYa2dTWFFnVjJsMGFDQk5hV3hyWVNCUWNtOXRiM1JwYjI0PTo5NGYwZGQ2Zjg3YTY0ZmVlOTc1NWY1ZmZkYjUxYmFlYQ==",
+      };
     case "czechia":
-      return "S1JBRlQtQ1ogVjd8TUtaWjI1MDIwMSBNaWxrYSBTYXkgSXQgV2l0aCBNaWxrYSBQcm9tb3Rpb24==";
+      return {
+        CODE: "CZ",
+        KEY: "UzFKQlJsUXRRMW9nVmpkOFRVdGFXakkxTURJd01TQk5hV3hyWVNCVFlYa2dTWFFnVjJsMGFDQk5hV3hyWVNCUWNtOXRiM1JwYjI0PTo1NmFjNzU5MTliOTY0ZGZkYjRlNzkwYTQ5YzVlMDg3Mg==",
+      };
     case "slovakia":
-      return "S1JBRlQtU0sgVjd8TUtaWjI1MDIwMSBNaWxrYSBTYXkgSXQgV2l0aCBNaWxrYSBQcm9tb3Rpb24==";
+      return {
+        CODE: "SK",
+        KEY: "UzFKQlJsUXRVMHNnVmpkOFRVdGFXakkxTURJd01TQk5hV3hyWVNCVFlYa2dTWFFnVjJsMGFDQk5hV3hyWVNCUWNtOXRiM1JwYjI0PTpjOWQxM2E4MTY1NGI0NjEzYTJjNGUzYzY1ZDI0Zjk0NA==",
+      };
     case "hungary":
-      return "S1JBRlQtSFUgVjd8TUtaWjI1MDIwMSBNaWxrYSBTYXkgSXQgV2l0aCBNaWxrYSBQcm9tb3Rpb24==";
+      return {
+        CODE: "HU",
+        KEY: "UzFKQlJsUXRTRlVnVmpkOFRVdGFXakkxTURJd01TQk5hV3hyWVNCVFlYa2dTWFFnVjJsMGFDQk5hV3hyWVNCUWNtOXRiM1JwYjI0PTo5ZjAzMjMxMDA5MGM0ODY5ODQ4M2E5ZTdhZmYyOGRkYg==",
+      };
     case "austria":
-      return "S1JBRlQuQVQgVjd8TUtaWjI1MDIwMSBNaWxrYSBTYXkgSXQgV2l0aCBNaWxrYSBQcm9tb3Rpb24==";
+      return {
+        CODE: "AT",
+        KEY: "UzFKQlJsUXVRVlFnVmpkOFRVdGFXakkxTURJd01TQk5hV3hyWVNCVFlYa2dTWFFnVjJsMGFDQk5hV3hyWVNCUWNtOXRiM1JwYjI0PTphYTUwNjc5ZmU4Mzk0OWU4ODhhZTkyNWMzZDVlODIyMQ==",
+      };
     default:
       return null;
   }
@@ -50,37 +66,40 @@ const getMarket = (
 
 export const ConsultixOperations = async (param: I_Request) => {
   try {
-    const apiKey =
-      "VGVzdCBLUkFGVC5JUyBWN3xNS1paMjUwMjAxIE1pbGthIFNheSBJdCBXaXRoIE1pbGthIFByb21vdGlvbg==";
+    const apiKey = getMarket(param.market.toLowerCase() as T_Country);
 
-    console.log({ apiKey });
+    // Create the attributes array
+    const attributes = [
+      { Name: "Email", value: param.email },
+      { Name: "Firstname", value: param.firstName },
+      { Name: "Lastname", value: param.lastName },
+      {
+        Name:
+          param.market === "germany"
+            ? "list:MKDE240201_Participants"
+            : "list:MKZZ250201_Participants",
+        value: "1",
+      },
+      { Name: "list:Milka_Email", value: param.promo ? "1" : "0" },
+      {
+        Name: "list:Milka_ThirdParty_Consent",
+        value: param.promo ? "1" : "0",
+      },
+      {
+        Name: `list:Privacy_Policy_${apiKey?.CODE}`,
+        value: "1",
+      },
+    ];
+
+    if (
+      (param.market === "czechia" || param.market === "slovakia") &&
+      param.mobile
+    ) {
+      attributes.push({ Name: "MobilePrivate", value: param.mobile });
+    }
 
     const params = {
-      Attributes: [
-        { Name: "Email", value: param.email },
-        { Name: "Firstname", value: param.firstName },
-        { Name: "Lastname", value: param.lastName },
-        { Name: "MobilePrivate", value: param.mobile || null },
-        {
-          Name:
-            param.market === "germany"
-              ? "list:MKDE240201_Participants"
-              : "list:MKZZ250201_Participants",
-          value: "1",
-        },
-        { Name: "list:Milka_Email", value: param.promo ? "1" : "0" },
-        {
-          Name: "list:Milka_ThirdParty_Consent",
-          value: param.promo ? "1" : "0",
-        },
-        {
-          Name:
-            param.market === "germany"
-              ? "list:Privacy_Policy_DE"
-              : "list:Privacy_Policy_TLD",
-          value: "1",
-        },
-      ],
+      Attributes: attributes,
       Transactions: [
         {
           Name:
@@ -97,7 +116,7 @@ export const ConsultixOperations = async (param: I_Request) => {
       params,
       {
         headers: {
-          Authorization: `Basic ${apiKey}`,
+          Authorization: `Basic ${apiKey?.KEY}`,
         },
       }
     );
