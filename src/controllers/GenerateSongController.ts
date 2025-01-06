@@ -107,6 +107,7 @@ export const GenerateSongController = async (req: Request, res: Response) => {
         receiverName: songData.pToName,
         senderName: songData.pFromName,
         newSongId: songGenerationResponse.songID,
+        variant,
       },
     });
   } catch (error) {
