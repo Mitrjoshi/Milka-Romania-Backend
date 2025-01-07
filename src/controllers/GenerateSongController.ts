@@ -89,6 +89,7 @@ export const GenerateSongController = async (req: Request, res: Response) => {
 
     const updateVideoModel = await UpdateSongModel({
       songId,
+      pVideoUUID: String(songGenerationResponse.songID),
     });
 
     if (!songGenerationResponse.success) {
