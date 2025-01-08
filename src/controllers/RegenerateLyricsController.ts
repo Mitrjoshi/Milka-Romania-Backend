@@ -125,7 +125,6 @@ export const RegenerateLyricsController = async (
     res.status(400).send({
       success: false,
       message: "Something went wrong.",
-      error,
     });
   }
 };

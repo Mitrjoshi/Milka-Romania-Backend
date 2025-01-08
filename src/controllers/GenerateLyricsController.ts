@@ -107,7 +107,6 @@ export const GenerateLyricsController = async (req: Request, res: Response) => {
     res.status(400).send({
       success: false,
       message: "Something went wrong.",
-      error,
     });
   }
 };

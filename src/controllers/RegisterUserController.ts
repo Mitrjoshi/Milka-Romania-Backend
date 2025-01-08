@@ -78,6 +78,6 @@ export const RegisterUserController = async (req: Request, res: Response) => {
       success: true,
     });
   } catch (error) {
-    res.status(400).send({ error, success: false });
+    res.status(400).send({ success: false });
   }
 };

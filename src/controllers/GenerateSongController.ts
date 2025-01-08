@@ -113,7 +113,6 @@ export const GenerateSongController = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(400).send({
-      error: error,
       success: false,
     });
     return;
