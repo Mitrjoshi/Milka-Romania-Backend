@@ -5,6 +5,8 @@ import {
   CustomPipelineGenerateSong,
   I_SongRequest,
 } from "@/utils/CustomPipelineApi";
+import { getSenderName } from "@/functions/getSenderName";
+import { T_Country } from "@/utils/ConsultixOperations";
 
 interface I_Request {
   regId: number;
@@ -12,7 +14,7 @@ interface I_Request {
   lyricsId: string;
   variant: string;
   voice: string;
-  language: string;
+  language: T_Country;
 }
 
 export const GenerateSongController = async (req: Request, res: Response) => {
@@ -77,11 +79,13 @@ export const GenerateSongController = async (req: Request, res: Response) => {
       msg: songData.pMsg,
       region: language.toLowerCase(),
       receiverName: songData.pToName,
-      senderName: songData.pFromName,
+      senderName: getSenderName(language, songData.pFromName),
       tag: String(songId),
       trackID: Number(songData.pTrackID),
       msgCode: variant,
     };
+
+    console.log(generateSongParam);
 
     const songGenerationResponse = await CustomPipelineGenerateSong(
       generateSongParam
