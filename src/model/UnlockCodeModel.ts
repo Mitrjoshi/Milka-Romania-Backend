@@ -26,7 +26,6 @@ export const UnlockCodeModel = async (
       .input("pCode", sql.NVarChar, params.code)
 
       .output("pVideoLink", sql.NVarChar)
-      .output("pVideoTitle", sql.NVarChar)
       .output("pFromName", sql.NVarChar)
       .output("pToName", sql.NVarChar)
       .output("pMsg", sql.NVarChar)
@@ -37,6 +36,7 @@ export const UnlockCodeModel = async (
 
     return response.output as I_Response;
   } catch (err) {
+    console.log(err);
     return false;
   } finally {
     if (connection && connection.connected) {

@@ -15,9 +15,11 @@ export const UnlockCodeController = async (req: Request, res: Response) => {
     });
 
     if (!unlockCodeData) {
-      res
-        .status(400)
-        .send({ message: "Something went wrong.", success: false });
+      res.status(400).send({
+        message: "Something went wrong.",
+        success: false,
+        unlockCodeData,
+      });
       return;
     }
 
@@ -32,7 +34,7 @@ export const UnlockCodeController = async (req: Request, res: Response) => {
       data: {
         msg: unlockCodeData.pMsg,
         receiver: unlockCodeData.pToName,
-        sender: unlockCodeData.pFromName,
+        sender: unlockCodeData?.pFromName?.split(" ")[0],
         songId: unlockCodeData.pSongID,
         title: unlockCodeData.pVideoTitle,
         unlockId: unlockCodeData.pUnlockID,
